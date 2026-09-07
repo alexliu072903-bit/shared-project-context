@@ -2,84 +2,101 @@
 
 [中文说明](README.zh-CN.md)
 
-A public, installable Agent Skill that automatically turns project-relevant changes from each person's goals and work context into one shared, evidence-backed project state.
+An open Agent Skill for keeping real work aligned with human-set goals.
 
-## What it solves
+It uses one model at every scale:
 
-People on the same team have different goals and work in different tools. Designers change flows, engineers implement systems, and product managers adjust direction. Teams usually learn what changed only through meetings, status requests, or reports.
+```text
+N human or Agent actors
+→ M goals set by authorized humans
+→ one evidence-backed goal state
+```
 
-Project Publisher lets each person's Agent automatically decide:
+One person using the repository is `N=1`. A small organization is `N>1`. There are no separate personal and team product modes.
 
-- whether a change affects a shared project;
-- whether another participant needs to know;
-- whether it is progress, a risk, a blocker, a dependency, or a confirmed decision;
-- what minimum information and evidence should be shared.
+## What it does
 
-No explicit “publish this” command is required. Work unrelated to a shared project remains private.
+Actors continue working in Codex, Claude Code, and later AirJelly. Project Publisher automatically detects meaningful progress, drift, risks, blockers, dependencies, and confirmed decisions, then relates them to active Goals.
 
-## Public mechanism, private data
+It maintains:
 
-This public repository contains only the reusable Skill, protocol, templates, and installer.
+- human-set Goals and acceptance conditions;
+- append-only Actor updates;
+- one canonical Goal State;
+- decision history and corrections;
+- quiet alignment reminders at turn end or next entry;
+- evidence references instead of raw activity dumps.
 
-Personal goals, work records, evidence, credentials, and real project state live in a separate local or private repository. They are never committed to this public repository by the installer.
+It does not rebuild task assignment, messaging, calendars, organization management, or performance evaluation.
+
+## Public engine, configurable workspace
+
+This public repository distributes the Skill, schemas, protocol, installer, and optional sync scripts. Actual Goals, Actor updates, evidence, and state live in a workspace created from the template.
+
+The workspace may stay local, use a private repository, or use another visibility boundary chosen by its owner. The same data model applies regardless of Actor count.
 
 ## Install
-
-Select at least one Runtime target:
 
 ```bash
 git clone https://github.com/alexliu072903-bit/shared-project-context.git
 cd shared-project-context
 bash install.sh \
   --identity "Your Name" \
-  --project "your-project" \
-  --repository "$HOME/project-context" \
+  --workspace "my-goals" \
+  --repository "$HOME/goal-context" \
   --codex \
   --claude-code
 ```
 
-Supported targets are `--codex`, `--claude-code`, `--airjelly-production`, and `--airjelly-development PATH`. Multiple targets can share the same private instance and configuration.
+Supported Runtime targets:
 
-The installer creates a private-by-default local instance, writes `~/.project-context/config.json`, and installs the Skill into the selected Runtime directories.
+- `--codex`
+- `--claude-code`
+- `--airjelly-production`
+- `--airjelly-development PATH`
 
-To install against an existing instance that already contains `project-context.json`, add `--use-existing`.
+The installer creates the first Actor, a draft Goal, `state.md`, and the Actor's empty attention state. It writes `~/.project-context/config.json` and installs one canonical Skill into the selected Runtimes.
 
-Open a new Codex task after installation so the Skill can be discovered reliably.
+`--project` remains accepted as an alias for `--workspace` during the early prototype.
 
-The generated private instance also includes an optional macOS 30-minute Git sync. It must be enabled explicitly after connecting a private remote with `scripts/setup-autosync.sh`.
+## Join an existing workspace
 
-## How it works
+After cloning or receiving access to an existing workspace:
 
-Continue working normally. At the end of a relevant Agent turn, Project Publisher checks whether the result changes a configured shared project's state.
+```bash
+bash install.sh \
+  --identity "Designer A" \
+  --workspace "airjelly" \
+  --repository "$HOME/airjelly-goal-context" \
+  --use-existing \
+  --codex \
+  --claude-code
+```
 
-- If it is unrelated or private, nothing is published.
-- If it is project-relevant, the Agent writes a minimal update.
-- If it changes shared understanding, the Agent refreshes the canonical `state.md`.
-- If it implies a high-impact direction change, it waits for an authorized person's confirmation.
+This adds the Actor when absent and creates only that Actor's profile, update directory, and attention state. Repository access and membership remain the responsibility of the existing collaboration platform.
 
-Explicit `$project-publisher` invocation is available for testing and correction, but it is not the normal workflow.
+## Reminder behavior
 
-## Team usage
+Project Publisher currently supports two Agent-native reminders:
 
-A designer and an engineer install the same public Skill while keeping different personal goals and private contexts.
+1. `turn_end`: one concise alignment note after the normal work result when it is useful immediately;
+2. `next_entry`: a persisted Focus Brief shown when the Actor next enters a relevant Agent turn.
 
-If the designer completes an Onboarding flow, their Agent may automatically publish:
+An isolated unrelated action is not automatically drift. The Skill requires a coherent Work Episode plus plausible opportunity cost, Goal stagnation, dependency risk, or deadline risk.
 
-> The main Onboarding flow has been updated and is awaiting product confirmation before engineering implementation.
+## AirJelly Context Source
 
-If the engineer discovers an API limitation, their Agent may publish:
+AirJelly is optional for Agent-turn behavior. Later it can provide incremental, deduplicated, evidence-backed Work Episodes for activity outside Codex and Claude Code. Project Publisher—not AirJelly—owns Goal attribution, reminders, confirmation, and canonical state changes. See [the Context Source contract](references/context-source-contract.md).
 
-> Engineering is blocked because the current API does not support the new Onboarding state; the data approach needs confirmation.
+## Optional Git sync
 
-Their personal goals do not need to match. Only changes relevant to the same project enter its shared state.
+The generated workspace includes macOS scripts for 30-minute commit, rebase, and push. Connect an appropriate remote, then explicitly run:
 
-### Current version
+```bash
+bash "$HOME/goal-context/scripts/setup-autosync.sh"
+```
 
-The installer currently supports local single-person trials. Separate installations do not yet connect automatically to the same shared project repository. A private shared-project remote and a member-joining flow are still required before a real multi-person trial.
-
-## First-version boundary
-
-This is not task assignment, employee monitoring, performance evaluation, or a complete OKR product. It tests whether different personal goals can produce one trustworthy, traceable, and correctable shared project state.
+The setup refuses a GitHub remote reported as public because work Context may be sensitive. Workspace owners may choose a different sharing mechanism or adapt the script deliberately.
 
 ## License
 

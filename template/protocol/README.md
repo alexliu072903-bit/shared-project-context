@@ -1,8 +1,8 @@
-# Shared Project Decision Protocol
+# Goal Decision Protocol
 
 ## Read
 
-Before work that may depend on project history, read `project.md`, `state.md`, and only the relevant valid decisions.
+Before work that may depend on history, read active files under `goals/`, `state.md`, and only the relevant valid decisions.
 
 ## Record
 
@@ -12,7 +12,7 @@ Do not record tentative preferences, open questions, ordinary work, temporary ex
 
 ## Format
 
-Write each decision to `projects/<project>/decisions/<decision-id>.md` with `project`, `decision`, `status`, `decided_by`, `decided_at`, and optional `supersedes` frontmatter. Include the decision, rationale, scope, explicit exclusions, and overturn signal. Use `To be validated` rather than inventing missing information.
+Write each decision to `decisions/<decision-id>.md` with `workspace`, `decision`, `status`, `decided_by`, `decided_at`, affected `goals`, and optional `supersedes` frontmatter. Include the decision, rationale, scope, explicit exclusions, and overturn signal. Use `To be validated` rather than inventing missing information.
 
 ## Change and correction
 

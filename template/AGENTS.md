@@ -1,7 +1,18 @@
-# Shared Project Context
+# Goal Context Workspace
 
-This repository contains private personal context and project state.
+This workspace uses one model at every scale: `N Actors → M human-set Goals → one Goal State`.
 
-When work may affect a shared project, read `project-context.json`, the personal goals file, and only the relevant project's `project.md`, `state.md`, and valid decisions. Use the installed `project-publisher` Skill before publishing and follow `protocol/README.md` for decisions and corrections.
+## At the start of relevant work
 
-Do not invent participants, progress, blockers, or evidence. Keep unrelated personal context private. Do not publish this repository or change its remote without explicit authorization.
+1. Read `workspace.json` and resolve the current Actor.
+2. Read active files under `goals/`, `state.md`, and `attention/<actor-id>.md`.
+3. If a valid next-entry reminder is pending, surface a short Focus Brief and mark it delivered.
+
+## At the end of relevant work
+
+1. Use the installed `project-publisher` Skill.
+2. Append only qualifying events under `actors/<actor-id>/updates/`.
+3. Update `state.md` only when Goal understanding changes.
+4. Follow `protocol/README.md` for decisions and corrections.
+
+Do not invent Actors, Goals, progress, blockers, dependencies, or evidence. Do not use Work Context for performance evaluation. Do not change repository visibility or membership without explicit authorization.

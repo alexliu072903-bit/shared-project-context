@@ -1,0 +1,13 @@
+{
+  "workspace": "__WORKSPACE__",
+  "actors": [
+    {
+      "id": "__ACTOR_ID__",
+      "name": "__IDENTITY__",
+      "can_manage_goals": true
+    }
+  ],
+  "goals_path": "goals",
+  "state_path": "state.md",
+  "attention_path": "attention"
+}

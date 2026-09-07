@@ -17,7 +17,7 @@ Each candidate episode needs:
 - source confidence;
 - incremental cursor or timestamp for querying new episodes.
 
-Do not emit a project update from a screenshot, isolated click, application duration, or activity count alone. Incomplete evidence may enrich an episode but may not establish progress, a blocker, or a decision by itself.
+Do not emit a Goal update from a screenshot, isolated click, application duration, or activity count alone. Incomplete evidence may enrich an episode but may not establish progress, a blocker, or a decision by itself.
 
 ## Responsibility boundary
 
@@ -25,11 +25,11 @@ AirJelly or another source owns collection, normalization, identity, evidence re
 
 Project Publisher owns:
 
-- mapping an episode to personal goals and configured projects;
+- mapping an episode to configured Goals;
 - deciding whether another participant needs to know;
 - choosing progress, risk, blocker, dependency, or decision;
 - requiring confirmation for high-impact changes;
-- writing append-only updates and canonical project state.
+- writing append-only Actor updates, alignment reminders, and canonical Goal State.
 
 ## First useful level
 

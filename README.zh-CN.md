@@ -2,90 +2,101 @@
 
 [English](README.md)
 
-一个公开、可安装的 Agent Skill。它会自动判断每个人的目标和工作 Context 中，哪些变化真正影响团队项目，并将其整理成一份有 Evidence、可追溯的共享项目状态。
+一套让真实工作持续对齐人设 Goal 的开源 Agent Skill。
 
-## 它解决什么问题
+它在任何规模下都使用同一套模型：
 
-团队成员的目标和工作内容并不相同。设计师在更新方案，工程师在实现功能，产品经理在调整方向；通常只有开会、追问或写周报时，大家才知道彼此做到哪里。
+```text
+N 个 Human / Agent Actor
+→ M 个由人设定的 Goal
+→ 一份有 Evidence 的 Goal State
+```
 
-Project Publisher 会让每个人的 Agent 自动判断：
+一个人使用时 `N=1`；小团队或公司使用时 `N>1`。个人和团队不是两种产品模式。
 
-- 这次变化是否影响某个共享项目；
-- 其他成员是否需要知道；
-- 它属于进展、风险、阻塞、依赖还是已确认的 Decision；
-- 应该共享哪些最小必要信息和 Evidence。
+## 它做什么
 
-用户不需要主动说“发布这条进展”。与共享项目无关的个人工作不会被发布。
+Actor 继续在 Codex、Claude Code，以及未来的 AirJelly 中正常工作。Project Publisher 自动识别有意义的进展、偏离、风险、Blocker、Dependency 和已确认 Decision，并判断它们如何影响当前 Goal。
 
-## Public 机制，Private 数据
+它负责维护：
 
-这个 public repository 只包含通用 Skill、Protocol、模板和安装器。
+- 由人设定的 Goal 与验收条件；
+- 每个 Actor 的 append-only Update；
+- 一份 canonical Goal State；
+- Decision 历史与纠错；
+- Agent turn 收尾或下次进入时的克制提醒；
+- Evidence 引用，而不是原始 Activity dump。
 
-每个人的目标、工作记录、Evidence、授权信息和真实项目状态，保存在独立的本地目录或 private repository 中，不会被安装器提交到这个 public repository。
+它不重复任务分配、IM、日历、组织管理或绩效评价等现有软件能力。
+
+## Public Engine，可配置 Workspace
+
+这个 public repository 只分发 Skill、Schema、Protocol、安装器和可选同步脚本。真实 Goal、Actor Update、Evidence 和 State 保存在由模板创建的 Workspace 中。
+
+Workspace 可以只放本机、使用 private repository，或由 Owner 选择其他可见性边界。无论有多少 Actor，数据模型相同。
 
 ## 安装
-
-至少选择一个 Runtime：
 
 ```bash
 git clone https://github.com/alexliu072903-bit/shared-project-context.git
 cd shared-project-context
 bash install.sh \
   --identity "你的名字" \
-  --project "项目 ID" \
-  --repository "$HOME/project-context" \
+  --workspace "my-goals" \
+  --repository "$HOME/goal-context" \
   --codex \
   --claude-code
 ```
 
-支持 `--codex`、`--claude-code`、`--airjelly-production` 和 `--airjelly-development PATH`，也可以让多个 Runtime 共用同一份 private instance 和配置。
+支持：
 
-安装器会：
+- `--codex`
+- `--claude-code`
+- `--airjelly-production`
+- `--airjelly-development PATH`
 
-1. 创建一个默认只保存在本机的 Context 实例；
-2. 写入 `~/.project-context/config.json`；
-3. 把 Skill 安装到选择的 Runtime 目录。
+安装器会创建第一个 Actor、一条待确认 Goal、`state.md` 和该 Actor 的空 Attention State；同时写入 `~/.project-context/config.json`，并把同一份 canonical Skill 安装到所选 Runtime。
 
-如果已经有包含 `project-context.json` 的实例，安装时增加 `--use-existing`。
+早期原型阶段仍接受 `--project` 作为 `--workspace` 的兼容别名。
 
-安装完成后重新打开一个 Codex task，让 Skill 被稳定发现。
+## 加入已有 Workspace
 
-生成的 private instance 还包含可选的 macOS 30 分钟 Git sync。连接 private remote 后，需要用户主动运行 `scripts/setup-autosync.sh` 才会启用。
+获得已有 Workspace 权限并 clone 后，运行：
 
-## 正常使用方式
+```bash
+bash install.sh \
+  --identity "Designer A" \
+  --workspace "airjelly" \
+  --repository "$HOME/airjelly-goal-context" \
+  --use-existing \
+  --codex \
+  --claude-code
+```
 
-用户只需要继续正常工作。在一次相关 Agent 工作结束前，Project Publisher 会自动判断结果是否改变了某个共享项目的状态。
+如果 Actor 尚不存在，安装器只新增该 Actor 的 Profile、Update 目录和 Attention State。Repository 权限和成员管理继续由现有协作平台负责。
 
-- 与项目无关或属于个人 Context：不发布；
-- 与项目有关：自动生成一条最小必要更新；
-- 改变当前项目理解：同时更新 canonical `state.md`；
-- 涉及延期、取消或方向改变：等待有权限的人确认。
+## 提醒方式
 
-显式调用 `$project-publisher` 只用于测试、纠错或主动检查，不是正常使用的必要步骤。
+当前支持两种 Agent-native 提醒：
 
-## 给团队成员使用
+1. `turn_end`：完成正常工作回复后，在确实有帮助时增加一句 Goal Alignment 提醒；
+2. `next_entry`：保存 Focus Brief，在 Actor 下次进入相关 Agent turn 时展示。
 
-设计师和工程师安装同一个 public Skill，但维护各自不同的个人目标和 Private Context。
+一次孤立的无关行为不自动等于偏离。系统需要看到完整 Work Episode，并且继续下去确实可能造成机会成本、Goal 停滞、Dependency 风险或 deadline 风险，才生成提醒。
 
-设计师完成一版 Onboarding 方案后，他的 Agent 可以自动发布：
+## AirJelly Context Source
 
-> Onboarding 主要流程已更新，等待产品确认后进入工程实现。
+Agent turn 内的判断不依赖 AirJelly。未来 AirJelly 可以提供 Codex、Claude Code 之外的增量 Work Episode，要求可去重、可追溯、有 Evidence。Goal 归属、提醒、Decision 确认和 canonical State 仍由 Project Publisher 负责。详见 [Context Source Contract](references/context-source-contract.md)。
 
-工程师发现接口问题会阻塞该方案时，他的 Agent 可以自动发布：
+## 可选 Git Sync
 
-> 当前接口不支持新的 Onboarding 状态，工程实现被阻塞，需要先确认数据方案。
+生成的 Workspace 包含 macOS 30 分钟 commit、rebase、push 脚本。连接合适的 remote 后，用户主动运行：
 
-两个人不需要拥有相同的个人目标。系统只把他们工作中与共同项目有关的部分汇入同一份项目状态。
+```bash
+bash "$HOME/goal-context/scripts/setup-autosync.sh"
+```
 
-### 当前版本说明
-
-当前 installer 先支持单人本地试用。设计师和工程师分别安装后，并不会自动连接到同一个 shared project repository。
-
-进入真实多人试用前，还需要补充一个 private shared-project remote，以及成员加入和发布更新的连接流程。
-
-## 第一版边界
-
-它目前不是任务分配工具、员工监控、绩效系统或完整 OKR 产品。第一版只验证：不同成员的不同目标，能否形成一份可信、可追溯、可纠正的共享项目状态。
+如果 GitHub 报告 remote 为 public，默认脚本会拒绝同步，因为 Work Context 可能包含敏感信息。Workspace Owner 可以选择其他共享方式，或明确修改策略。
 
 ## License
 

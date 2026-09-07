@@ -1,7 +1,0 @@
-{
-  "identity": "__IDENTITY__",
-  "personal_goals": "personal/__IDENTITY_SLUG__/goals.md",
-  "projects": [
-    {"id": "__PROJECT__", "path": "projects/__PROJECT__"}
-  ]
-}
