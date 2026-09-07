@@ -7,9 +7,13 @@ IDENTITY=""
 PROJECT=""
 REPOSITORY=""
 USE_EXISTING=false
+INSTALL_CODEX=false
+INSTALL_CLAUDE_CODE=false
+INSTALL_AIRJELLY_PROD=false
+AIRJELLY_DEV_REPO=""
 
 usage() {
-  echo 'Usage: install.sh --identity "Your Name" --project project-id --repository /path/to/private-instance [--use-existing]'
+  echo 'Usage: install.sh --identity "Your Name" --project project-id --repository PATH [--use-existing] [--codex] [--claude-code] [--airjelly-production] [--airjelly-development PATH]'
 }
 
 while [ "$#" -gt 0 ]; do
@@ -18,11 +22,21 @@ while [ "$#" -gt 0 ]; do
     --project) PROJECT="${2:-}"; shift 2 ;;
     --repository) REPOSITORY="${2:-}"; shift 2 ;;
     --use-existing) USE_EXISTING=true; shift ;;
+    --codex) INSTALL_CODEX=true; shift ;;
+    --claude-code) INSTALL_CLAUDE_CODE=true; shift ;;
+    --airjelly-production) INSTALL_AIRJELLY_PROD=true; shift ;;
+    --airjelly-development) AIRJELLY_DEV_REPO="${2:-}"; shift 2 ;;
     *) usage; exit 1 ;;
   esac
 done
 
 if [ -z "$IDENTITY" ] || [ -z "$PROJECT" ] || [ -z "$REPOSITORY" ]; then
+  usage
+  exit 1
+fi
+
+if [ "$INSTALL_CODEX" = false ] && [ "$INSTALL_CLAUDE_CODE" = false ] && [ "$INSTALL_AIRJELLY_PROD" = false ] && [ -z "$AIRJELLY_DEV_REPO" ]; then
+  echo 'Select at least one runtime target.' >&2
   usage
   exit 1
 fi
@@ -37,9 +51,7 @@ if [ -z "$IDENTITY_SLUG" ]; then
 fi
 
 REPOSITORY="${REPOSITORY/#\~/$HOME}"
-SKILLS_ROOT="${PROJECT_CONTEXT_SKILLS_ROOT:-$HOME/.codex/skills}"
 CONFIG_ROOT="${PROJECT_CONTEXT_CONFIG_ROOT:-$HOME/.project-context}"
-SKILL_TARGET="$SKILLS_ROOT/project-publisher"
 CONFIG_TARGET="$CONFIG_ROOT/config.json"
 
 if [ "$USE_EXISTING" = false ] && [ -e "$REPOSITORY" ] && [ -n "$(find "$REPOSITORY" -mindepth 1 -maxdepth 1 -print -quit 2>/dev/null)" ]; then
@@ -47,12 +59,22 @@ if [ "$USE_EXISTING" = false ] && [ -e "$REPOSITORY" ] && [ -n "$(find "$REPOSIT
   exit 1
 fi
 
-if [ -e "$SKILL_TARGET" ]; then
-  echo "Refusing to overwrite existing Skill: $SKILL_TARGET" >&2
-  exit 1
-fi
+install_skill() {
+  target_root="$1"
+  target="$target_root/project-publisher"
+  if [ -e "$target" ]; then
+    echo "Refusing to overwrite existing Skill: $target" >&2
+    exit 1
+  fi
+  mkdir -p "$target/agents" "$target/references"
+  cp "$SOURCE_DIR/SKILL.md" "$target/SKILL.md"
+  cp "$SOURCE_DIR/agents/openai.yaml" "$target/agents/openai.yaml"
+  cp "$SOURCE_DIR/references/update-schema.md" "$target/references/update-schema.md"
+  cp "$SOURCE_DIR/references/context-source-contract.md" "$target/references/context-source-contract.md"
+  echo "Installed Skill: $target"
+}
 
-mkdir -p "$SKILLS_ROOT" "$CONFIG_ROOT"
+mkdir -p "$CONFIG_ROOT"
 
 if [ "$USE_EXISTING" = true ]; then
   if [ ! -f "$REPOSITORY/project-context.json" ]; then
@@ -66,7 +88,7 @@ else
   mv "$REPOSITORY/projects/__PROJECT__" "$REPOSITORY/projects/$PROJECT"
   mv "$REPOSITORY/projects/$PROJECT/updates/__IDENTITY_SLUG__" "$REPOSITORY/projects/$PROJECT/updates/$IDENTITY_SLUG"
 
-python3 - "$REPOSITORY" "$IDENTITY" "$IDENTITY_SLUG" "$PROJECT" <<'PY'
+  python3 - "$REPOSITORY" "$IDENTITY" "$IDENTITY_SLUG" "$PROJECT" <<'PY'
 from datetime import date
 from pathlib import Path
 import sys
@@ -87,11 +109,6 @@ for path in Path(root).rglob("*"):
 PY
 fi
 
-mkdir -p "$SKILL_TARGET/agents" "$SKILL_TARGET/references"
-cp "$SOURCE_DIR/SKILL.md" "$SKILL_TARGET/SKILL.md"
-cp "$SOURCE_DIR/agents/openai.yaml" "$SKILL_TARGET/agents/openai.yaml"
-cp "$SOURCE_DIR/references/update-schema.md" "$SKILL_TARGET/references/update-schema.md"
-
 python3 - "$CONFIG_TARGET" "$REPOSITORY" <<'PY'
 import json
 import sys
@@ -102,10 +119,25 @@ with open(target, "w", encoding="utf-8") as handle:
     handle.write("\n")
 PY
 
+if [ "$INSTALL_CODEX" = true ]; then
+  install_skill "${PROJECT_CONTEXT_CODEX_SKILLS_ROOT:-$HOME/.codex/skills}"
+fi
+
+if [ "$INSTALL_CLAUDE_CODE" = true ]; then
+  install_skill "${PROJECT_CONTEXT_CLAUDE_SKILLS_ROOT:-$HOME/.claude/skills}"
+fi
+
+if [ "$INSTALL_AIRJELLY_PROD" = true ]; then
+  install_skill "$HOME/Library/Application Support/AirJelly/skills"
+fi
+
+if [ -n "$AIRJELLY_DEV_REPO" ]; then
+  install_skill "$AIRJELLY_DEV_REPO/.data/skills"
+fi
+
 if [ "$USE_EXISTING" = true ]; then
   echo "Using existing private local instance: $REPOSITORY"
 else
   echo "Created private local instance: $REPOSITORY"
 fi
-echo "Installed Skill: $SKILL_TARGET"
 echo "Configured: $CONFIG_TARGET"

@@ -23,7 +23,9 @@ This public repository contains only the reusable Skill, protocol, templates, an
 
 Personal goals, work records, evidence, credentials, and real project state live in a separate local or private repository. They are never committed to this public repository by the installer.
 
-## Install for Codex
+## Install
+
+Select at least one Runtime target:
 
 ```bash
 git clone https://github.com/alexliu072903-bit/shared-project-context.git
@@ -31,14 +33,20 @@ cd shared-project-context
 bash install.sh \
   --identity "Your Name" \
   --project "your-project" \
-  --repository "$HOME/project-context"
+  --repository "$HOME/project-context" \
+  --codex \
+  --claude-code
 ```
 
-The installer creates a private-by-default local instance, writes `~/.project-context/config.json`, and installs the Skill to `~/.codex/skills/project-publisher`.
+Supported targets are `--codex`, `--claude-code`, `--airjelly-production`, and `--airjelly-development PATH`. Multiple targets can share the same private instance and configuration.
+
+The installer creates a private-by-default local instance, writes `~/.project-context/config.json`, and installs the Skill into the selected Runtime directories.
 
 To install against an existing instance that already contains `project-context.json`, add `--use-existing`.
 
 Open a new Codex task after installation so the Skill can be discovered reliably.
+
+The generated private instance also includes an optional macOS 30-minute Git sync. It must be enabled explicitly after connecting a private remote with `scripts/setup-autosync.sh`.
 
 ## How it works
 

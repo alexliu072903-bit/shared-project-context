@@ -26,6 +26,14 @@ Do not require the user to say “use Project Publisher” or ask for an update.
 
 Explicit invocation remains available for testing, correction, or review, but is not the normal workflow.
 
+When the update type is `decision`, or when correcting a previously published project fact, read `<repository>/protocol/README.md` before writing.
+
+## External Context Sources
+
+Codex and Claude Code can classify changes visible in their own Agent turns. When AirJelly or another always-on source is available, treat it as an evidence provider rather than a publisher of project truth.
+
+Read [references/context-source-contract.md](references/context-source-contract.md) before consuming external work Context. Project Publisher still owns project attribution, the publication threshold, confirmation, and canonical state updates.
+
 ## Classify a work change
 
 Determine which personal goal the change supports, whether it changes a shared project's progress, risk, blocker, dependency, or confirmed decision, which project is affected, and what evidence supports the classification.

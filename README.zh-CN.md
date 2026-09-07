@@ -23,7 +23,9 @@ Project Publisher 会让每个人的 Agent 自动判断：
 
 每个人的目标、工作记录、Evidence、授权信息和真实项目状态，保存在独立的本地目录或 private repository 中，不会被安装器提交到这个 public repository。
 
-## 在 Codex 中安装
+## 安装
+
+至少选择一个 Runtime：
 
 ```bash
 git clone https://github.com/alexliu072903-bit/shared-project-context.git
@@ -31,18 +33,24 @@ cd shared-project-context
 bash install.sh \
   --identity "你的名字" \
   --project "项目 ID" \
-  --repository "$HOME/project-context"
+  --repository "$HOME/project-context" \
+  --codex \
+  --claude-code
 ```
+
+支持 `--codex`、`--claude-code`、`--airjelly-production` 和 `--airjelly-development PATH`，也可以让多个 Runtime 共用同一份 private instance 和配置。
 
 安装器会：
 
 1. 创建一个默认只保存在本机的 Context 实例；
 2. 写入 `~/.project-context/config.json`；
-3. 把 Skill 安装到 `~/.codex/skills/project-publisher`。
+3. 把 Skill 安装到选择的 Runtime 目录。
 
 如果已经有包含 `project-context.json` 的实例，安装时增加 `--use-existing`。
 
 安装完成后重新打开一个 Codex task，让 Skill 被稳定发现。
+
+生成的 private instance 还包含可选的 macOS 30 分钟 Git sync。连接 private remote 后，需要用户主动运行 `scripts/setup-autosync.sh` 才会启用。
 
 ## 正常使用方式
 
