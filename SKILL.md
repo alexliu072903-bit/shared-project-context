@@ -1,6 +1,6 @@
 ---
 name: project-publisher
-description: Publish project-relevant changes from a person's goals and work context into a shared repository-backed project state. Use when work progress, blockers, dependencies, or confirmed decisions may affect a shared project. Keep unrelated or private work in personal context; do not use this Skill for task assignment, performance evaluation, or bulk activity reporting.
+description: Automatically detect and publish project-relevant changes from a person's goals and work context into a shared repository-backed project state. Use when a user or Agent completes meaningful work, discovers a risk, blocker, or dependency, or confirms a decision that may affect a shared project. No explicit invocation is required. Keep unrelated or private work in personal context; do not use this Skill for task assignment, performance evaluation, or bulk activity reporting.
 ---
 
 # Project Publisher
@@ -15,6 +15,16 @@ Personal context and shared project context are different sources of truth. Publ
 4. Require `identity`, `personal_goals`, and at least one project with `id` and `path`.
 
 Resolve relative paths against `<repository>`. If anything is missing, stop and ask the user to run the installer rather than guessing.
+
+## Trigger automatically
+
+Do not require the user to say “use Project Publisher” or ask for an update. Before finishing any turn that contains meaningful work, a discovered problem, a changed dependency, or a confirmed decision, silently check whether it crosses a configured project's publication boundary.
+
+- If it qualifies, publish the update as part of the same turn and briefly tell the user what changed.
+- If it does not qualify, remain silent and continue the user's task normally.
+- If a high-impact direction change is ambiguous, ask once whether it is confirmed before publishing it as a decision.
+
+Explicit invocation remains available for testing, correction, or review, but is not the normal workflow.
 
 ## Classify a work change
 
