@@ -98,13 +98,12 @@ bash "$HOME/goal-context/scripts/setup-autosync.sh"
 
 The setup refuses a GitHub remote reported as public because work Context may be sensitive. Workspace owners may choose a different sharing mechanism or adapt the script deliberately.
 
-## Which project do you want?
+## Related projects
 
 | Project | Where the context lives | Pick it when |
 | --- | --- | --- |
 | **Shared Project Context** (this one) | A workspace that tracks goals and evidence across people and agents | You need to keep several actors aligned with goals someone set |
 | [Cairn Context](https://github.com/alexliu072903-bit/cairn-context) | A separate repository you own, for one or several projects | You want decisions kept outside the project repository, and an agent that judges when to read or record |
-| [Cairn Lite](https://github.com/alexliu072903-bit/cairn-lite) | Inside the project itself, as plain Markdown with a CLI | You want the knowledge to travel with the repository, with `validate` and a cross-agent test |
 
 ## License
 

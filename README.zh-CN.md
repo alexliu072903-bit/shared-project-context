@@ -98,13 +98,12 @@ bash "$HOME/goal-context/scripts/setup-autosync.sh"
 
 如果 GitHub 报告 remote 为 public，默认脚本会拒绝同步，因为 Work Context 可能包含敏感信息。Workspace Owner 可以选择其他共享方式，或明确修改策略。
 
-## 该用哪个项目？
+## 相关项目
 
 | 项目 | 上下文放在哪里 | 适合什么时候用 |
 | --- | --- | --- |
 | **Shared Project Context**（本项目） | 一个跟踪目标和证据的工作区，覆盖多个人和 Agent | 需要让多个参与者与有人设定的目标保持一致 |
 | [Cairn Context](https://github.com/alexliu072903-bit/cairn-context) | 你自己拥有的独立仓库，可服务一个或多个项目 | 希望决定留在项目仓库之外，并由 Agent 判断何时读取或记录 |
-| [Cairn Lite](https://github.com/alexliu072903-bit/cairn-lite) | 项目内部，用普通 Markdown 加一个 CLI | 希望知识跟着仓库走，并需要 `validate` 和跨 Agent 测试 |
 
 ## License
 
