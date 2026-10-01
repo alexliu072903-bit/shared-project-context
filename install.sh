@@ -62,7 +62,7 @@ fi
 
 install_skill() {
   target_root="$1"
-  target="$target_root/project-publisher"
+  target="$target_root/shared-project-context"
   if [ -e "$target" ]; then
     echo "Refusing to overwrite existing Skill: $target" >&2
     exit 1
@@ -72,10 +72,14 @@ install_skill() {
   cp "$SOURCE_DIR/agents/openai.yaml" "$target/agents/openai.yaml"
   cp "$SOURCE_DIR"/references/*.md "$target/references/"
   echo "Installed Skill: $target"
+  if [ -e "$target_root/project-publisher" ]; then
+    echo "Note: the earlier name project-publisher is still installed at $target_root/project-publisher." >&2
+    echo "      Remove it so the Skill is not loaded twice." >&2
+  fi
 }
 
 check_skill_target() {
-  target="$1/project-publisher"
+  target="$1/shared-project-context"
   if [ -e "$target" ]; then
     echo "Refusing to overwrite existing Skill: $target" >&2
     exit 1

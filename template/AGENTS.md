@@ -10,7 +10,7 @@ This workspace uses one model at every scale: `N Actors â†’ M human-set Goals â†
 
 ## At the end of relevant work
 
-1. Use the installed `project-publisher` Skill.
+1. Use the installed `shared-project-context` Skill.
 2. Append only qualifying events under `actors/<actor-id>/updates/`.
 3. Update `state.md` only when Goal understanding changes.
 4. Follow `protocol/README.md` for decisions and corrections.

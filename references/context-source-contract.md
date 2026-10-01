@@ -23,7 +23,7 @@ Do not emit a Goal update from a screenshot, isolated click, application duratio
 
 AirJelly or another source owns collection, normalization, identity, evidence references, privacy controls, and incremental retrieval.
 
-Project Publisher owns:
+Shared Project Context owns:
 
 - mapping an episode to configured Goals;
 - deciding whether another participant needs to know;
@@ -33,6 +33,6 @@ Project Publisher owns:
 
 ## First useful level
 
-The initial AirJelly integration is sufficient when Project Publisher can request recent, complete Work Episodes for one person, trace each episode to evidence, avoid duplicates, and exclude private or unrelated activity before publication.
+The initial AirJelly integration is sufficient when Shared Project Context can request recent, complete Work Episodes for one person, trace each episode to evidence, avoid duplicates, and exclude private or unrelated activity before publication.
 
 Real-time streaming, full raw-screen replay, company-wide ingestion, performance scoring, and a separate dashboard are not required for the first validation.

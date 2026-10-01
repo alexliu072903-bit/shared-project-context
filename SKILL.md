@@ -1,9 +1,9 @@
 ---
-name: project-publisher
+name: shared-project-context
 description: Automatically relate meaningful work from one or more human or Agent actors to human-set goals, maintain a repository-backed goal state, and surface concise alignment reminders. Use when work produces progress, drift, risks, blockers, dependencies, or confirmed decisions that may change a configured goal. The same model applies from one actor to a small organization. No explicit invocation is required. Do not use for task assignment, performance evaluation, or bulk activity reporting.
 ---
 
-# Project Publisher
+# Shared Project Context
 
 Use one scale-independent model:
 
@@ -36,7 +36,7 @@ Before finishing a turn containing meaningful work, a discovered problem, a chan
 3. What evidence supports the change.
 4. Whether another Actor's next action or the overall Goal State changes.
 
-Do not require the user to invoke Project Publisher. If nothing crosses the update threshold, remain silent and continue normally.
+Do not require the user to invoke Shared Project Context. If nothing crosses the update threshold, remain silent and continue normally.
 
 Read [references/update-schema.md](references/update-schema.md) before writing an update.
 
@@ -73,7 +73,7 @@ Read [references/attention-schema.md](references/attention-schema.md) before wri
 
 Codex and Claude Code can classify changes visible in their own Agent turns. AirJelly or another always-on source may provide external Work Episodes, but it does not own Goal attribution or final Goal State.
 
-Read [references/context-source-contract.md](references/context-source-contract.md) before consuming external Context. Project Publisher owns Goal mapping, update thresholds, reminders, confirmation, and canonical state changes.
+Read [references/context-source-contract.md](references/context-source-contract.md) before consuming external Context. Shared Project Context owns Goal mapping, update thresholds, reminders, confirmation, and canonical state changes.
 
 ## Corrections and boundaries
 

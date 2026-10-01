@@ -16,7 +16,7 @@ One person using the repository is `N=1`. A small organization is `N>1`. There a
 
 ## What it does
 
-Actors continue working in Codex, Claude Code, and later AirJelly. Project Publisher automatically detects meaningful progress, drift, risks, blockers, dependencies, and confirmed decisions, then relates them to active Goals.
+Actors continue working in Codex, Claude Code, and later AirJelly. Shared Project Context automatically detects meaningful progress, drift, risks, blockers, dependencies, and confirmed decisions, then relates them to active Goals.
 
 It maintains:
 
@@ -59,6 +59,8 @@ The installer creates the first Actor, a draft Goal, `state.md`, and the Actor's
 
 `--project` remains accepted as an alias for `--workspace` during the early prototype.
 
+Earlier versions installed this Skill as `project-publisher`. If you installed it then, delete that directory and run the installer again. Existing workspaces keep working; update the Skill name in their `AGENTS.md` to `shared-project-context`.
+
 ## Join an existing workspace
 
 After cloning or receiving access to an existing workspace:
@@ -77,7 +79,7 @@ This adds the Actor when absent and creates only that Actor's profile, update di
 
 ## Reminder behavior
 
-Project Publisher currently supports two Agent-native reminders:
+Shared Project Context currently supports two Agent-native reminders:
 
 1. `turn_end`: one concise alignment note after the normal work result when it is useful immediately;
 2. `next_entry`: a persisted Focus Brief shown when the Actor next enters a relevant Agent turn.
@@ -86,7 +88,7 @@ An isolated unrelated action is not automatically drift. The Skill requires a co
 
 ## AirJelly Context Source
 
-AirJelly is optional for Agent-turn behavior. Later it can provide incremental, deduplicated, evidence-backed Work Episodes for activity outside Codex and Claude Code. Project Publisher—not AirJelly—owns Goal attribution, reminders, confirmation, and canonical state changes. See [the Context Source contract](references/context-source-contract.md).
+AirJelly is optional for Agent-turn behavior. Later it can provide incremental, deduplicated, evidence-backed Work Episodes for activity outside Codex and Claude Code. Shared Project Context—not AirJelly—owns Goal attribution, reminders, confirmation, and canonical state changes. See [the Context Source contract](references/context-source-contract.md).
 
 ## Optional Git sync
 

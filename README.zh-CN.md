@@ -16,7 +16,7 @@ N 个 Human / Agent Actor
 
 ## 它做什么
 
-Actor 继续在 Codex、Claude Code，以及未来的 AirJelly 中正常工作。Project Publisher 自动识别有意义的进展、偏离、风险、Blocker、Dependency 和已确认 Decision，并判断它们如何影响当前 Goal。
+Actor 继续在 Codex、Claude Code，以及未来的 AirJelly 中正常工作。Shared Project Context 自动识别有意义的进展、偏离、风险、Blocker、Dependency 和已确认 Decision，并判断它们如何影响当前 Goal。
 
 它负责维护：
 
@@ -86,7 +86,7 @@ bash install.sh \
 
 ## AirJelly Context Source
 
-Agent turn 内的判断不依赖 AirJelly。未来 AirJelly 可以提供 Codex、Claude Code 之外的增量 Work Episode，要求可去重、可追溯、有 Evidence。Goal 归属、提醒、Decision 确认和 canonical State 仍由 Project Publisher 负责。详见 [Context Source Contract](references/context-source-contract.md)。
+Agent turn 内的判断不依赖 AirJelly。未来 AirJelly 可以提供 Codex、Claude Code 之外的增量 Work Episode，要求可去重、可追溯、有 Evidence。Goal 归属、提醒、Decision 确认和 canonical State 仍由 Shared Project Context 负责。详见 [Context Source Contract](references/context-source-contract.md)。
 
 ## 可选 Git Sync
 
