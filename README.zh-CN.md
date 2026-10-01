@@ -59,6 +59,8 @@ bash install.sh \
 
 早期原型阶段仍接受 `--project` 作为 `--workspace` 的兼容别名。
 
+早期版本把这个 Skill 安装为 `project-publisher`。如果你当时装过，请删除那个目录，再重新运行安装器。已有的 Workspace 可以继续使用，把它们 `AGENTS.md` 里的 Skill 名称改成 `shared-project-context` 即可。
+
 ## 加入已有 Workspace
 
 获得已有 Workspace 权限并 clone 后，运行：
